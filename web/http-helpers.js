@@ -34,12 +34,16 @@ exports.serveAssets = function(res, asset, callback) {
 
 };
 
-exports.postAssets = function(res, searchTerm, callback) {
-  if (archive.isUrlInList(searchTerm)) {
+exports.postAssets = function(res, searchTerm) {
+  archive.isUrlInList(searchTerm, function(value){
+    if (value) {
+      // It's true that it is in the list
 
-  } else {
-    archive.addUrlToList(searchTerm);
-  }
+    } else {
+      // It is not yet in the list
+      archive.addUrlToList(searchTerm);
+    }
+  });
 };
 
 
