@@ -19,11 +19,18 @@ exports.serveAssets = function(res, asset, callback) {
   //   res.writeHead(200, httpHelpers.headers);
   //   res.end(data);
   // });
-  // *** LOOK AT MIME-TYPES LIBRARY FOR GRABBING THE CSS ** 
-  callback(asset, function(err, data) {
-    res.writeHead(200, exports.headers);
-    res.write(data);
+  // *** LOOK AT MIME-TYPES LIBRARY FOR GRABBING THE CSS **
+
+  var result = callback(asset).pipe(res);
+  result.on('end', function() {
+    res.writeHead(200, this.headers);
+    res.end();
   });
+
+  // callback(asset, function(err, data) {
+  //   res.writeHead(200, exports.headers);
+  //   res.write(data);
+  // });
 
 };
 

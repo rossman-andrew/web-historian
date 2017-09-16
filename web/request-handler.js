@@ -14,18 +14,22 @@ exports.handleRequest = function (req, res) {
     // var callback = writeIndex.bind(this);
     //httpHelpers.serveAssets(res, '/index.html', callback);
     // res.writeHead(200, httpHelpers.headers);
-    httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.readFile);
-  } else if(req.method === 'POST'){
-    //go to sites.txt
-    //console.log("got a post request");
-    var storage = [];
-    req.on('data', function(chunk){
-      storage.push(chunk);
-    });
-    req.on('end', function(){
-      storage = Buffer.concat(storage).toString();
-      console.log(storage);
-    });
+
+    //httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.readFile);
+    httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.createReadStream);
+  }
+};
+  // else if(req.method === 'POST'){
+  //   //go to sites.txt
+  //   //console.log("got a post request");
+  //   var storage = [];
+  //   req.on('data', function(chunk){
+  //     storage.push(chunk);
+  //   });
+  //   req.on('end', function(){
+  //     storage = Buffer.concat(storage).toString();
+  //     console.log(storage);
+  //   });
 
     /*console.log('input data: ' + storage);
     var sitesList;
@@ -51,9 +55,9 @@ exports.handleRequest = function (req, res) {
     fs.writeFile(archive.paths.list, JSON.stringify(sitesList));
         //fs write file
 */
-  }
 
-  setTimeout(() => {
-    res.end();
-  }, 10);//res.end(archive.paths.list);
-};
+
+  // setTimeout(() => {
+  //   res.end();
+  // }, 10);//res.end(archive.paths.list);
+// };
