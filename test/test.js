@@ -65,8 +65,10 @@ describe('server', function() {
           .send({ url: url })
           .expect(302, function (err) {
             if (!err) {
+              console.log('302D');
               var fileContents = fs.readFileSync(archive.paths.list, 'utf8');
-              expect(fileContents).to.equal(url + '\n');
+              console.log('Contents of file in test: ', fileContents);
+              expect(JSON.stringify(fileContents)).to.deep.equal({url: false});
             }
 
             done(err);
@@ -79,11 +81,11 @@ describe('server', function() {
 describe('archive helpers', function() {
   describe('#readListOfUrls', function () {
     it('should read urls from sites.txt', function (done) {
-      var urlArray = ['example1.com', 'example2.com'];
-      fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
+      var urlObject = {'example1.com': true, 'example2.com': true};
+      fs.writeFileSync(archive.paths.list, JSON.stringify(urlObject));//urlArray.join('\n'));
 
       archive.readListOfUrls(function(urls) {
-        expect(urls).to.deep.equal(urlArray);
+        expect(urls).to.deep.equal(urlObject);
         done();
       });
     });
@@ -91,8 +93,8 @@ describe('archive helpers', function() {
 
   describe('#isUrlInList', function () {
     it('should check if a url is in the list', function (done) {
-      var urlArray = ['example1.com', 'example2.com'];
-      fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
+      var urlObject = {'example1.com': true, 'example2.com': true};
+      fs.writeFileSync(archive.paths.list, JSON.stringify(urlObject));
 
       var counter = 0;
       var total = 2;
@@ -111,8 +113,8 @@ describe('archive helpers', function() {
 
   describe('#addUrlToList', function () {
     it('should add a url to the list', function (done) {
-      var urlArray = ['example1.com', 'example2.com\n'];
-      fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
+      var urlObject = {'example1.com': true, 'example2.com': true};
+      fs.writeFileSync(archive.paths.list, JSON.stringify(urlObject));
 
       archive.addUrlToList('someurl.com', function () {
         archive.isUrlInList('someurl.com', function (exists) {

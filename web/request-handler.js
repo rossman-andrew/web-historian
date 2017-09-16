@@ -5,7 +5,7 @@ var fs = require('fs');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
-  if(req.method === 'GET' && req.url === '/'){
+  if (req.method === 'GET' && req.url === '/') {
     // function writeIndex(data){
     //   res.writeHead(200, exports.headers);
     //   res.write(data);
@@ -17,20 +17,26 @@ exports.handleRequest = function (req, res) {
 
     //httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.readFile);
     httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.createReadStream);
+  } else if (req.method === 'POST' && req.url === '/') {
+
+    console.log('got a post request');
+    var storage = [];
+    req.on('data', function(chunk) {
+      storage.push(chunk);
+    });
+    req.on('end', function() {
+      storage = Buffer.concat(storage).toString();
+      console.log('You entered: ', storage.substring(4));
+      httpHelpers.postAssets(res, storage.substring(4));
+    });
+    res.writeHead(302, exports.headers);
+    res.end();
+    //go to sites.txt
+  } else {
+    res.writeHead(404, exports.headers);
+    res.end();
   }
 };
-  // else if(req.method === 'POST'){
-  //   //go to sites.txt
-  //   //console.log("got a post request");
-  //   var storage = [];
-  //   req.on('data', function(chunk){
-  //     storage.push(chunk);
-  //   });
-  //   req.on('end', function(){
-  //     storage = Buffer.concat(storage).toString();
-  //     console.log(storage);
-  //   });
-
     /*console.log('input data: ' + storage);
     var sitesList;
     fs.readFile(archive.paths.list, function(err, data){//look at datafile

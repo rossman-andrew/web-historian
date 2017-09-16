@@ -26,15 +26,68 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  // Read them from "sites.txt"
+
+  fs.readFile(this.paths.list, 'utf8', (err, data) => {
+    callback(JSON.parse(data));
+
+  });
+  //callback(readList);
 };
 
 exports.isUrlInList = function(url, callback) {
+  fs.readFile(this.paths.list, 'utf8', (err, data) => {
+    if (data.length === 0) {
+      console.log('in isUrlInList, sites.txt is empty');
+      data = {};
+    } else {
+      var data = JSON.parse(data);
+    }
+    var trueFalse = function(value) {
+      if (value === undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+    if (callback) {
+      callback(trueFalse(data[url]));
+    }
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
+  fs.readFile(this.paths.list, 'utf8', (err, data) => {
+    if (data.length === 0) {
+      console.log('sites.txt is empty');
+      data = {};
+    } else {
+      var data = JSON.parse(data);
+    }
+
+    if (data[url] === undefined) {
+      data[url] = false;
+      fs.writeFile(this.paths.list, JSON.stringify(data), (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    }
+    if (callback) {
+      callback();
+    }
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
+
+  fs.readFile(this.paths.list, 'utf8', (err, data) => {
+
+
+    if (callback) {
+      callback(data[url]);
+    }
+  });
 };
 
 exports.downloadUrls = function(urls) {

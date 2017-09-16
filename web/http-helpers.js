@@ -34,6 +34,14 @@ exports.serveAssets = function(res, asset, callback) {
 
 };
 
+exports.postAssets = function(res, searchTerm, callback) {
+  if (archive.isUrlInList(searchTerm)) {
+
+  } else {
+    archive.addUrlToList(searchTerm);
+  }
+};
+
 
 
 // As you progress, keep thinking about what helper functions you can put here!
