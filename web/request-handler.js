@@ -2,6 +2,7 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var httpHelpers = require('./http-helpers');
 var fs = require('fs');
+var htmlfetcher = require('../workers/htmlfetcher.js');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
@@ -14,23 +15,25 @@ exports.handleRequest = function (req, res) {
     // var callback = writeIndex.bind(this);
     //httpHelpers.serveAssets(res, '/index.html', callback);
     // res.writeHead(200, httpHelpers.headers);
-
+    htmlfetcher.htmlfetcher();
     //httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.readFile);
     httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.createReadStream);
+
   } else if (req.method === 'POST' && req.url === '/') {
 
-    console.log('got a post request');
+    //console.log('got a post request');
     var storage = [];
     req.on('data', function(chunk) {
       storage.push(chunk);
     });
     req.on('end', function() {
       storage = Buffer.concat(storage).toString();
-      console.log('You entered: ', storage.substring(4));
+      //console.log('You entered: ', storage.substring(4));
       httpHelpers.postAssets(res, storage.substring(4));
     });
+    httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html', fs.createReadStream);
     res.writeHead(302, exports.headers);
-    res.end();
+    //res.end();
     //go to sites.txt
   } else {
     res.writeHead(404, exports.headers);

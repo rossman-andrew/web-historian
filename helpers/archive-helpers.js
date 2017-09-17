@@ -59,7 +59,7 @@ exports.isUrlInList = function(url, callback) {
 exports.addUrlToList = function(url, callback) {
   fs.readFile(this.paths.list, 'utf8', (err, data) => {
     if (data.length === 0) {
-      console.log('sites.txt is empty');
+      //console.log('sites.txt is empty');
       data = {};
     } else {
       var data = JSON.parse(data);
@@ -91,5 +91,5 @@ exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
-  
+
 };
